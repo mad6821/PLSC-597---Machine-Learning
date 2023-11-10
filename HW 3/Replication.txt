@@ -1,0 +1,189 @@
+* Figure Comparing Democracies & Autocracies (in supplement) *
+
+collapse (mean) competition2, by (dem year)
+
+twoway (line competition2 year if dem==1) (line competition2 year if dem==0, lpattern(dash))
+
+* Figure Comparing Democracies, Autocracies, and Anocracies *
+
+collapse (mean) competition2, by (demyn autyn anocyn year)
+
+twoway (line competition2 year if demyn==1) (line competition2 year if autyn==1, lpattern(dash)) (line competition2 year if anocyn==1)
+
+* Figure 1 *
+collapse (mean) competitionREL competitionNAT competitionLW competitionRW, by (ccode country)
+
+keep if country=="Chile" | country=="Colombia" | country=="El Salvador" | country=="France" | country=="Peru" | country=="Philippines" | country=="Spain" | country=="Sri Lanka" | country=="Turkey" | country=="UK"
+
+graph bar (asis) competitionREL competitionNAT competitionLW competitionRW, over(country,label(angle(forty_five) labsize(small))) bar(1, fcolor(gs0)) bar(2, fcolor(gs4)) bar(3, fcolor(gs8)) bar(4, fcolor(gs12)) legend(order(1 "Religious" 2 "Nationalist" 3 "Left-Wing" 4 "Right-Wing"))
+
+* T-Test of competition by dichotomous regime type*
+
+ttest competition2, by (dem)
+
+* Anova of competition by 3 regime categories *
+
+anova competition2 type
+
+tabulate type, summarize(competition2)
+
+* Table 1 *
+
+sum attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop
+
+* Table 2 *
+nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop, robust cluster (groupcode)
+
+* Table 2, First Differences *
+
+estsimp nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop, robust cluster (groupcode)
+
+setx lagcompetition2 mean lagfactor mean lagcompfactint2 mean laggdppc mean lagrpc2 mean laglogpop mean laglogpop mean laganocyn median lagdemyn median lagcivwar median
+
+simqi, fd(ev) changex(lagdemyn 0 1)
+
+simqi, fd(ev) changex(lagcivwar 0 1)
+
+sum lagcompetition2
+
+simqi, fd(ev) changex(lagcompetition2 1.737651 2.865479)
+
+sum laggdppc
+
+simqi, fd(ev) changex(laggdppc 5199.751 10679.259)
+
+sum laglogpop
+
+simqi, fd(ev) changex(laglogpop 10.31765 11.894278)
+
+* Figure 2 *
+grinter lagcompetition2, inter(lagcompfactint2) const02(lagfactor) equation(attack2) yline(0) kdensity nomeantext nomean
+
+* Table 3, Model 1 *
+nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop if RANDrel==1, robust cluster (groupcode)
+
+* Table 3, Model 1 First Differences *
+estsimp nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop if RANDrel==1, robust cluster (groupcode)
+
+setx lagcompetition2 mean lagfactor mean lagcompfactint2 mean laggdppc mean lagrpc2 mean laglogpop mean laglogpop mean laganocyn median lagdemyn median lagcivwar median
+
+sum lagcompetition2 if RANDrel==1
+
+simqi, fd(ev) changex(lagcompetition2 1.490287 2.53529)
+
+sum lagfactor if RANDrel==1
+
+simqi, fd(ev) changex(lagfactor .9575244 1.9547444)
+
+sum lagcompfactint2 if RANDrel==1
+
+simqi, fd(ev) changex(lagcompfactint2 1.451396 3.341311)
+
+simqi, fd(ev) changex(lagcivwar 0 1)
+
+* Table 3, Model 2 *
+nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop if RANDnat==1, robust cluster (groupcode)
+
+* Table 3, Model 2 First Differences *
+estsimp nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop if RANDnat==1, robust cluster (groupcode)
+
+setx lagcompetition2 mean lagfactor mean lagcompfactint2 mean laggdppc mean lagrpc2 mean laglogpop mean laglogpop mean laganocyn median lagdemyn median lagcivwar median
+
+sum lagcompetition2 if RANDnat==1
+
+simqi, fd(ev) changex(lagcompetition2 1.997322 3.360215)
+
+simqi, fd(ev) changex(laganocyn 0 1)
+
+simqi, fd(ev) changex(lagdemyn 0 1)
+
+sum laggdppc if RANDnat==1
+
+simqi, fd(ev) changex(laggdppc 5179.834 10498.813)
+
+simqi, fd(ev) changex(lagcivwar 0 1)
+
+sum laglogpop if RANDnat==1
+
+simqi, fd(ev) changex(laglogpop 10.08116 11.739182)
+
+* Table 3, Model 3 *
+nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop if RANDlw==1, robust cluster (groupcode)
+
+* Table 3, Model 3 First Differences *
+estsimp nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop if RANDlw==1, robust cluster (groupcode)
+
+setx lagcompetition2 mean lagfactor mean lagcompfactint2 mean laggdppc mean lagrpc2 mean laglogpop mean laglogpop mean laganocyn median lagdemyn median lagcivwar median
+
+sum lagcompetition2 if RANDlw==1
+
+simqi, fd(ev) changex(lagcompetition2 1.576552 2.3673879)
+
+sum lagfactor if RANDlw==1
+
+simqi, fd(ev) changex(lagfactor .5961078 1.7322648)
+
+simqi, fd(ev) changex(lagdemyn 0 1)
+
+sum lagrpc2 if RANDlw==1
+
+simqi, fd(ev) changex(lagrpc2 .8464817 1.2444071)
+
+sum laglogpop if RANDlw==1
+
+simqi, fd(ev) changex(laglogpop 10.2763 11.663539)
+
+* Table 3, Model 4 *
+nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop if RANDrw==1, robust cluster (groupcode)
+
+* Table 3, Model 4 First Differences *
+estsimp nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop if RANDrw==1, robust cluster (groupcode)
+
+setx lagcompetition2 mean lagfactor mean lagcompfactint2 mean laggdppc mean lagrpc2 mean laglogpop mean laglogpop mean laganocyn median lagdemyn median lagcivwar median
+
+sum lagfactor if RANDrw==1
+
+simqi, fd(ev) changex(lagfactor .0940921 1.1576521)
+
+simqi, fd(ev) changex(laganocyn 0 1)
+
+sum lagrpc2 if RANDrw==1
+
+simqi, fd(ev) changex(lagrpc2 1.094066 1.5918045)
+
+simqi, fd(ev) changex(lagcivwar 0 1)
+
+sum laglogpop if RANDrw==1
+
+simqi, fd(ev) changex(laglogpop 10.75788 11.999174)
+
+* MODEL FIT (Footnote 19)*
+* Note - Run command after each model estimation (Tables 2 & 3)
+
+estat ic
+
+* Figure 3 - Clockwise from top left *
+
+* Religious *
+
+nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop if RANDrel==1, robust cluster (groupcode)
+
+grinter lagcompetition2, inter(lagcompfactint2) const02(lagfactor) equation(attack2) yline(0) kdensity nomeantext nomean
+
+* Nationalist * 
+
+nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop if RANDnat==1, robust cluster (groupcode)
+
+grinter lagcompetition2, inter(lagcompfactint2) const02(lagfactor) equation(attack2) yline(0) kdensity nomeantext nomean nonote
+
+* Right-Wing * 
+
+nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop if RANDrw==1, robust cluster (groupcode)
+
+grinter lagcompetition2, inter(lagcompfactint2) const02(lagfactor) equation(attack2) yline(0) kdensity nomeantext nomean nonote
+
+* Left-Wing * 
+
+nbreg attack2 lagcompetition2 lagfactor lagcompfactint2 laganocyn lagdemyn laggdppc lagrpc2 lagcivwar laglogpop if RANDnat==1, robust cluster (groupcode)
+
+grinter lagcompetition2, inter(lagcompfactint2) const02(lagfactor) equation(attack2) yline(0) kdensity nomeantext nomean nonote
